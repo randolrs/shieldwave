@@ -11,10 +11,11 @@
     "dev:frontend": "npm run dev --workspace=packages/frontend",
     "dev:backend": "npm run dev --workspace=packages/backend",
     "build": "npm run build --workspace=packages/frontend && npm run build --workspace=packages/backend",
-    "vercel-build": "npm install --workspaces --include-workspace-root && cd packages/frontend && npx vite build",
     "start": "npm run start --workspace=packages/backend"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "@vitejs/plugin-react": "^6.0.1",
+    "concurrently": "^8.2.2",
+    "vite": "^8.0.3"
   }
 }

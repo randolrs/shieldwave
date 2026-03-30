@@ -1,6 +1,6 @@
 {
-  "installCommand": "npm install",
-  "buildCommand": "npm run vercel-build",
+  "installCommand": "npm install --workspaces --include-workspace-root",
+  "buildCommand": "cd packages/frontend && npx vite build",
   "outputDirectory": "packages/frontend/dist",
   "framework": null,
   "functions": {
