@@ -1,15 +1,21 @@
 import { createClient } from '@supabase/supabase-js';
 import { config } from '../config/env.js';
 
-export const supabase = createClient(
-  config.supabase.url,
-  config.supabase.serviceRoleKey,
-);
+export const supabase = config.supabase.url
+  ? createClient(config.supabase.url, config.supabase.serviceRoleKey)
+  : null;
+
+function ensureClient() {
+  if (!supabase) {
+    throw new Error('Supabase is not configured. Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.');
+  }
+  return supabase;
+}
 
 // ─── Customer helpers ────────────────────────────────────────────────
 
 export async function getCustomerByEmail(email) {
-  const { data, error } = await supabase
+  const { data, error } = await ensureClient()
     .from('customers')
     .select('*')
     .eq('email', email)
@@ -20,7 +26,7 @@ export async function getCustomerByEmail(email) {
 }
 
 export async function createCustomer(customer) {
-  const { data, error } = await supabase
+  const { data, error } = await ensureClient()
     .from('customers')
     .insert(customer)
     .select()
@@ -31,7 +37,7 @@ export async function createCustomer(customer) {
 }
 
 export async function updateCustomer(id, updates) {
-  const { data, error } = await supabase
+  const { data, error } = await ensureClient()
     .from('customers')
     .update(updates)
     .eq('id', id)
@@ -45,7 +51,7 @@ export async function updateCustomer(id, updates) {
 // ─── Quote helpers ───────────────────────────────────────────────────
 
 export async function createQuote(quote) {
-  const { data, error } = await supabase
+  const { data, error } = await ensureClient()
     .from('quotes')
     .insert(quote)
     .select()
@@ -56,7 +62,7 @@ export async function createQuote(quote) {
 }
 
 export async function getQuotesByCustomer(customerId) {
-  const { data, error } = await supabase
+  const { data, error } = await ensureClient()
     .from('quotes')
     .select('*')
     .eq('customer_id', customerId)
@@ -67,7 +73,7 @@ export async function getQuotesByCustomer(customerId) {
 }
 
 export async function updateQuoteStatus(id, status) {
-  const { data, error } = await supabase
+  const { data, error } = await ensureClient()
     .from('quotes')
     .update({ status })
     .eq('id', id)
@@ -81,7 +87,7 @@ export async function updateQuoteStatus(id, status) {
 // ─── Policy helpers ──────────────────────────────────────────────────
 
 export async function createPolicy(policy) {
-  const { data, error } = await supabase
+  const { data, error } = await ensureClient()
     .from('policies')
     .insert(policy)
     .select()
@@ -92,7 +98,7 @@ export async function createPolicy(policy) {
 }
 
 export async function getPoliciesByCustomer(customerId) {
-  const { data, error } = await supabase
+  const { data, error } = await ensureClient()
     .from('policies')
     .select('*')
     .eq('customer_id', customerId)
@@ -103,7 +109,7 @@ export async function getPoliciesByCustomer(customerId) {
 }
 
 export async function updatePolicyStatus(id, status) {
-  const { data, error } = await supabase
+  const { data, error } = await ensureClient()
     .from('policies')
     .update({ status })
     .eq('id', id)
@@ -117,7 +123,7 @@ export async function updatePolicyStatus(id, status) {
 // ─── Commission helpers ──────────────────────────────────────────────
 
 export async function createCommission(commission) {
-  const { data, error } = await supabase
+  const { data, error } = await ensureClient()
     .from('commissions')
     .insert(commission)
     .select()
@@ -130,7 +136,7 @@ export async function createCommission(commission) {
 // ─── Certificate holder helpers ──────────────────────────────────────
 
 export async function createCertificateHolder(holder) {
-  const { data, error } = await supabase
+  const { data, error } = await ensureClient()
     .from('certificate_holders')
     .insert(holder)
     .select()
@@ -141,7 +147,7 @@ export async function createCertificateHolder(holder) {
 }
 
 export async function getCertificateHoldersByPolicy(policyId) {
-  const { data, error } = await supabase
+  const { data, error } = await ensureClient()
     .from('certificate_holders')
     .select('*')
     .eq('policy_id', policyId)

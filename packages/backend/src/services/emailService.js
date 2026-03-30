@@ -1,7 +1,11 @@
 import { Resend } from 'resend';
 import { config } from '../config/env.js';
 
-const resend = new Resend(config.resend.apiKey);
+let _resend;
+function getResend() {
+  if (!_resend) _resend = new Resend(config.resend.apiKey);
+  return _resend;
+}
 
 const FROM = config.resend.fromEmail;
 
@@ -87,7 +91,7 @@ export async function sendCOIEmail(to, businessName, coiUrl) {
     </p>
   `);
 
-  const { data, error } = await resend.emails.send({
+  const { data, error } = await getResend().emails.send({
     from: FROM,
     to,
     subject,
@@ -131,7 +135,7 @@ export async function sendManualReviewNotification(to, businessName) {
     </p>
   `);
 
-  const { data, error } = await resend.emails.send({
+  const { data, error } = await getResend().emails.send({
     from: FROM,
     to,
     subject,
@@ -180,7 +184,7 @@ export async function sendRenewalReminder(to, businessName, expiryDate, daysUnti
     </p>
   `);
 
-  const { data, error } = await resend.emails.send({
+  const { data, error } = await getResend().emails.send({
     from: FROM,
     to,
     subject,

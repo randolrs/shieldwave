@@ -1,9 +1,11 @@
 import Stripe from 'stripe';
 import { config } from '../config/env.js';
 
-const stripe = new Stripe(config.stripe.secretKey, {
-  apiVersion: '2024-06-20',
-});
+let _stripe;
+function getStripe() {
+  if (!_stripe) _stripe = new Stripe(config.stripe.secretKey, { apiVersion: '2024-06-20' });
+  return _stripe;
+}
 
 /**
  * Creates a Stripe SetupIntent to collect a payment method token.
@@ -18,7 +20,7 @@ const stripe = new Stripe(config.stripe.secretKey, {
  */
 export async function createSetupIntent(customerEmail, metadata = {}) {
   // Find or create a Stripe Customer so we can reuse the payment method later
-  const customers = await stripe.customers.list({
+  const customers = await getStripe().customers.list({
     email: customerEmail,
     limit: 1,
   });
@@ -27,13 +29,13 @@ export async function createSetupIntent(customerEmail, metadata = {}) {
   if (customers.data.length > 0) {
     stripeCustomer = customers.data[0];
   } else {
-    stripeCustomer = await stripe.customers.create({
+    stripeCustomer = await getStripe().customers.create({
       email: customerEmail,
       metadata: { source: 'shieldwave' },
     });
   }
 
-  const setupIntent = await stripe.setupIntents.create({
+  const setupIntent = await getStripe().setupIntents.create({
     customer: stripeCustomer.id,
     payment_method_types: ['card'],
     metadata: {
@@ -67,7 +69,7 @@ export async function createPaymentIntent(
   paymentMethodId,
   metadata = {},
 ) {
-  const paymentIntent = await stripe.paymentIntents.create({
+  const paymentIntent = await getStripe().paymentIntents.create({
     amount,
     currency,
     payment_method: paymentMethodId,
@@ -98,7 +100,7 @@ export async function createPaymentIntent(
  * @throws {Stripe.errors.StripeSignatureVerificationError} If signature is invalid
  */
 export function handleWebhook(payload, signature) {
-  const event = stripe.webhooks.constructEvent(
+  const event = getStripe().webhooks.constructEvent(
     payload,
     signature,
     config.stripe.webhookSecret,

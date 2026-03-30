@@ -1,6 +1,7 @@
 {
   "name": "shieldwave",
   "private": true,
+  "type": "module",
   "workspaces": [
     "packages/frontend",
     "packages/backend"
