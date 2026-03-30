@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-volt text-navy-950 font-display font-bold px-8 py-4 text-lg
+           hover:bg-volt-300 active:bg-volt-500 transition-colors
+           inline-flex items-center justify-center;
+  }
+  .btn-secondary {
+    @apply border-2 border-volt text-volt font-display font-bold px-8 py-4 text-lg
+           hover:bg-volt hover:text-navy-950 transition-colors
+           inline-flex items-center justify-center;
+  }
+  .card {
+    @apply bg-navy-900 border border-navy-700 p-6;
+  }
+  .input-field {
+    @apply w-full bg-navy-900 border border-navy-600 text-white px-4 py-3 font-body
+           placeholder:text-navy-400 focus:outline-none focus:border-volt
+           transition-colors;
+  }
+  .chip {
+    @apply px-4 py-2 border border-navy-600 text-navy-200 font-body text-sm
+           cursor-pointer transition-colors hover:border-volt hover:text-volt;
+  }
+  .chip-selected {
+    @apply bg-volt text-navy-950 border-volt font-semibold;
+  }
+}
