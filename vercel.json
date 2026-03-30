@@ -1,6 +1,6 @@
 {
-  "installCommand": "npm install --ignore-scripts || true",
-  "buildCommand": "sh build.sh",
+  "installCommand": "npm install || true",
+  "buildCommand": "node build.mjs",
   "outputDirectory": "packages/frontend/dist",
   "framework": null,
   "functions": {
