@@ -1,62 +1,62 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { loadStripe } from '@stripe/stripe-js';
-import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { createSetupIntent, bindPolicy } from '../lib/api';
-
-const stripePromise = loadStripe(
-  import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder'
-);
 
 function formatCurrency(amount) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(amount);
 }
 
-function CheckoutForm({ quote, customerId }) {
-  const stripe = useStripe();
-  const elements = useElements();
+function DemoPaymentForm({ quote, customerId }) {
   const navigate = useNavigate();
   const [processing, setProcessing] = useState(false);
-  const [error, setError] = useState(null);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (!stripe || !elements) return;
-
     setProcessing(true);
-    setError(null);
 
-    try {
-      const { error: stripeError, setupIntent } = await stripe.confirmSetup({
-        elements,
-        redirect: 'if_required',
+    // Simulate bind delay for demo
+    setTimeout(() => {
+      navigate('/success', {
+        state: {
+          policy: {
+            id: crypto.randomUUID(),
+            carrierName: quote.carrierName,
+            carrierPolicyId: `POL-${Date.now()}`,
+            premium: quote.premiumAnnual,
+            effectiveDate: new Date().toISOString(),
+            expiryDate: new Date(Date.now() + 365 * 86400000).toISOString(),
+            status: 'active',
+          },
+          coiUrl: null,
+        },
       });
-
-      if (stripeError) {
-        setError(stripeError.message);
-        setProcessing(false);
-        return;
-      }
-
-      const result = await bindPolicy(quote.id, customerId, setupIntent.payment_method);
-      navigate('/success', { state: result });
-    } catch (err) {
-      setError(err.message);
-      setProcessing(false);
-    }
+    }, 2000);
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <PaymentElement />
-      {error && (
-        <div className="mt-4 bg-red-900/30 border border-red-700 px-4 py-3 text-red-300 text-sm">
-          {error}
+      <div className="space-y-4">
+        <div>
+          <label className="text-navy-400 text-sm block mb-1">Card number</label>
+          <input className="input-field" placeholder="4242 4242 4242 4242" defaultValue="4242 4242 4242 4242" />
         </div>
-      )}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="text-navy-400 text-sm block mb-1">Expiry</label>
+            <input className="input-field" placeholder="12/28" defaultValue="12/28" />
+          </div>
+          <div>
+            <label className="text-navy-400 text-sm block mb-1">CVC</label>
+            <input className="input-field" placeholder="123" defaultValue="123" />
+          </div>
+        </div>
+      </div>
+      <div className="mt-4 bg-navy-800 border border-navy-600 px-4 py-3 text-navy-400 text-xs">
+        Demo mode — no real charges. Connect Stripe to enable live payments.
+      </div>
       <button
         type="submit"
-        disabled={!stripe || processing}
+        disabled={processing}
         className={`btn-primary w-full mt-6 ${processing ? 'opacity-50 cursor-wait' : ''}`}
       >
         {processing ? 'Binding your policy…' : `Bind Policy — ${formatCurrency(quote.premiumAnnual)}/yr`}
@@ -65,23 +65,79 @@ function CheckoutForm({ quote, customerId }) {
   );
 }
 
+let stripePromise = null;
+
+function getStripePromise() {
+  if (!stripePromise) {
+    const key = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+    if (key && key.startsWith('pk_')) {
+      import('@stripe/stripe-js').then(({ loadStripe }) => {
+        stripePromise = loadStripe(key);
+      });
+    }
+  }
+  return stripePromise;
+}
+
+function StripePaymentForm({ quote, customerId, clientSecret }) {
+  const [StripeComponents, setStripeComponents] = useState(null);
+  const navigate = useNavigate();
+  const [processing, setProcessing] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    import('@stripe/react-stripe-js').then((mod) => {
+      setStripeComponents(mod);
+    });
+  }, []);
+
+  if (!StripeComponents) {
+    return <div className="flex items-center justify-center py-12">
+      <div className="w-8 h-8 border-4 border-navy-700 border-t-volt rounded-full animate-spin" />
+    </div>;
+  }
+
+  const { Elements, PaymentElement, useStripe, useElements } = StripeComponents;
+
+  return (
+    <Elements stripe={getStripePromise()} options={{ clientSecret, appearance: { theme: 'night', variables: { colorPrimary: '#c8ee44' } } }}>
+      <InnerStripeForm quote={quote} customerId={customerId} />
+    </Elements>
+  );
+}
+
 export default function Checkout() {
   const location = useLocation();
   const navigate = useNavigate();
   const [clientSecret, setClientSecret] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [useDemo, setUseDemo] = useState(false);
 
   const data = location.state;
 
   useEffect(() => {
     if (!data) return;
 
+    const stripeKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+    if (!stripeKey || !stripeKey.startsWith('pk_')) {
+      setUseDemo(true);
+      setLoading(false);
+      return;
+    }
+
     createSetupIntent(data.quote?.email || '', data.customerId)
       .then((res) => {
-        setClientSecret(res.clientSecret);
+        if (res.clientSecret && res.clientSecret !== 'demo_not_configured') {
+          setClientSecret(res.clientSecret);
+        } else {
+          setUseDemo(true);
+        }
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(() => {
+        setUseDemo(true);
+        setLoading(false);
+      });
   }, [data]);
 
   if (!data) {
@@ -147,10 +203,10 @@ export default function Checkout() {
                 <div className="flex items-center justify-center py-12">
                   <div className="w-8 h-8 border-4 border-navy-700 border-t-volt rounded-full animate-spin" />
                 </div>
+              ) : useDemo ? (
+                <DemoPaymentForm quote={quote} customerId={customerId} />
               ) : clientSecret ? (
-                <Elements stripe={stripePromise} options={{ clientSecret, appearance: { theme: 'night', variables: { colorPrimary: '#c8ee44' } } }}>
-                  <CheckoutForm quote={quote} customerId={customerId} />
-                </Elements>
+                <StripePaymentForm quote={quote} customerId={customerId} clientSecret={clientSecret} />
               ) : (
                 <p className="text-navy-400 text-center py-12">Unable to initialize payment. Please try again.</p>
               )}
