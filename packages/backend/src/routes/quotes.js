@@ -22,13 +22,13 @@ const intakeSchema = z.object({
   address: z.string().min(1, 'Address is required'),
   city: z.string().min(1, 'City is required'),
   state: z.string().length(2, 'State must be a 2-letter code'),
-  zip: z.string().regex(/^\d{5}(-\d{4})?$/, 'Invalid ZIP code'),
+  zip: z.string().min(5, 'ZIP code is required').regex(/^\d{5}(-\d{4})?$/, 'ZIP must be 5 digits (e.g. 98101)'),
 
   // Q3: Contact information
   contactFirstName: z.string().min(1, 'First name is required'),
   contactLastName: z.string().min(1, 'Last name is required'),
   email: z.string().email('Invalid email address'),
-  phone: z.string().min(10, 'Phone number is required'),
+  phone: z.string().min(7, 'Phone number is required'),
 
   // Q4: Services offered
   services: z

@@ -53,8 +53,8 @@ export default function GetQuote() {
 
   const canAdvance = () => {
     switch (step) {
-      case 1: return form.businessName && form.address && form.city && form.state && form.zip;
-      case 2: return form.contactFirstName && form.contactLastName && form.email && form.phone;
+      case 1: return form.businessName && form.address && form.city && form.state.length === 2 && /^\d{5}$/.test(form.zip);
+      case 2: return form.contactFirstName && form.contactLastName && form.email.includes('@') && form.phone.replace(/\D/g, '').length >= 10;
       case 3: return form.services.length > 0;
       case 4: return form.chemicalsUsed !== null;
       case 5: return form.employeeCount !== '';
