@@ -70,11 +70,23 @@ export default function GetQuote() {
       setStep(step + 1);
       return;
     }
-    // Submit
+    // Submit — trim all string fields
     setLoading(true);
     setError(null);
     try {
-      const result = await submitQuote(form);
+      const cleaned = {
+        ...form,
+        businessName: form.businessName.trim(),
+        address: form.address.trim(),
+        city: form.city.trim(),
+        state: form.state.trim().toUpperCase(),
+        zip: form.zip.trim().replace(/\D/g, ''),
+        contactFirstName: form.contactFirstName.trim(),
+        contactLastName: form.contactLastName.trim(),
+        email: form.email.trim().toLowerCase(),
+        phone: form.phone.trim(),
+      };
+      const result = await submitQuote(cleaned);
       navigate('/quotes', { state: result });
     } catch (err) {
       setError(err.message);
@@ -163,8 +175,9 @@ export default function GetQuote() {
                     className="input-field col-span-2"
                     placeholder="ZIP"
                     maxLength={5}
+                    inputMode="numeric"
                     value={form.zip}
-                    onChange={(e) => update('zip', e.target.value)}
+                    onChange={(e) => update('zip', e.target.value.replace(/\D/g, ''))}
                   />
                 </div>
               </div>
