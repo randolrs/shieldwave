@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { addCertificateHolder } from '../lib/api';
+import GlowInput, { GlowTextarea } from '../components/GlowInput';
 
 function formatCurrency(amount) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(amount);
@@ -124,19 +125,18 @@ export default function Success() {
               </div>
             ) : (
               <form onSubmit={handleAddHolder} className="space-y-4">
-                <input
-                  className="input-field"
+                <GlowInput
                   placeholder="Certificate holder name (e.g. ABC Property Management)"
                   value={holderName}
                   onChange={(e) => setHolderName(e.target.value)}
                   required
                 />
-                <textarea
-                  className="input-field min-h-[80px]"
+                <GlowTextarea
                   placeholder="Certificate holder address"
                   value={holderAddress}
                   onChange={(e) => setHolderAddress(e.target.value)}
                   required
+                  style={{ minHeight: '80px' }}
                 />
                 {holderError && (
                   <div className="bg-red-900/30 border border-red-700 px-4 py-3 text-red-300 text-sm">

@@ -11,6 +11,24 @@
   }
 }
 
+/* ── Animated glow focus ring ─────────────────────────────────────── */
+
+@property --glow-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes glow-spin {
+  from { --glow-angle: 0deg; }
+  to { --glow-angle: 360deg; }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
 @layer components {
   .btn-primary {
     @apply bg-volt text-navy-950 font-display font-bold px-8 py-4 text-lg
@@ -27,9 +45,68 @@
   }
   .input-field {
     @apply w-full bg-navy-900 border border-navy-600 text-white px-4 py-3 font-body
-           placeholder:text-navy-400 focus:outline-none focus:border-volt
-           transition-colors;
+           placeholder:text-navy-400 focus:outline-none transition-all;
+    position: relative;
   }
+
+  /* Glow wrapper — wraps each input for the animated border effect */
+  .glow-wrap {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .glow-wrap::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background: conic-gradient(
+      from var(--glow-angle),
+      transparent 0%,
+      #c8ee44 10%,
+      #c8ee44cc 20%,
+      transparent 30%,
+      transparent 50%,
+      #c8ee4488 60%,
+      #c8ee44 70%,
+      transparent 80%
+    );
+    animation: glow-spin 3s linear infinite;
+  }
+
+  .glow-wrap::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    z-index: -1;
+    opacity: 0;
+    filter: blur(12px);
+    transition: opacity 0.3s ease;
+    background: conic-gradient(
+      from var(--glow-angle),
+      transparent 0%,
+      #c8ee44 10%,
+      #c8ee44cc 20%,
+      transparent 30%,
+      transparent 50%,
+      #c8ee4488 60%,
+      #c8ee44 70%,
+      transparent 80%
+    );
+    animation: glow-spin 3s linear infinite, glow-pulse 2s ease-in-out infinite;
+  }
+
+  .glow-wrap:focus-within::before,
+  .glow-wrap:focus-within::after {
+    opacity: 1;
+  }
+
+  .glow-wrap:focus-within .input-field {
+    border-color: #c8ee44;
+  }
+
   .chip {
     @apply px-4 py-2 border border-navy-600 text-navy-200 font-body text-sm
            cursor-pointer transition-colors hover:border-volt hover:text-volt;

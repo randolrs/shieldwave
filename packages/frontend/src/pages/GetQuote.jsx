@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { submitQuote } from '../lib/api';
+import GlowInput from '../components/GlowInput';
 
 const SERVICES = [
   'Pressure Washing', 'Soft Washing', 'Roof Cleaning', 'Concrete Cleaning',
@@ -144,35 +145,33 @@ export default function GetQuote() {
               <h2 className="font-display text-3xl font-bold mb-2">What's your business name?</h2>
               <p className="text-navy-400 mb-8">We'll use this to look up your info and pre-fill your application.</p>
               <div className="space-y-4">
-                <input
-                  className="input-field"
+                <GlowInput
                   placeholder="Business name"
                   value={form.businessName}
                   onChange={(e) => update('businessName', e.target.value)}
                   autoFocus
                 />
-                <input
-                  className="input-field"
+                <GlowInput
                   placeholder="Street address"
                   value={form.address}
                   onChange={(e) => update('address', e.target.value)}
                 />
                 <div className="grid grid-cols-6 gap-4">
-                  <input
-                    className="input-field col-span-3"
+                  <GlowInput
+                    className="col-span-3"
                     placeholder="City"
                     value={form.city}
                     onChange={(e) => update('city', e.target.value)}
                   />
-                  <input
-                    className="input-field col-span-1"
+                  <GlowInput
+                    className="col-span-1"
                     placeholder="State"
                     maxLength={2}
                     value={form.state}
                     onChange={(e) => update('state', e.target.value.toUpperCase())}
                   />
-                  <input
-                    className="input-field col-span-2"
+                  <GlowInput
+                    className="col-span-2"
                     placeholder="ZIP"
                     maxLength={5}
                     inputMode="numeric"
@@ -191,29 +190,25 @@ export default function GetQuote() {
               <p className="text-navy-400 mb-8">So we can send you quotes and your COI.</p>
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                  <input
-                    className="input-field"
+                  <GlowInput
                     placeholder="First name"
                     value={form.contactFirstName}
                     onChange={(e) => update('contactFirstName', e.target.value)}
                     autoFocus
                   />
-                  <input
-                    className="input-field"
+                  <GlowInput
                     placeholder="Last name"
                     value={form.contactLastName}
                     onChange={(e) => update('contactLastName', e.target.value)}
                   />
                 </div>
-                <input
-                  className="input-field"
+                <GlowInput
                   type="email"
                   placeholder="Email address"
                   value={form.email}
                   onChange={(e) => update('email', e.target.value)}
                 />
-                <input
-                  className="input-field"
+                <GlowInput
                   type="tel"
                   placeholder="Phone number"
                   value={form.phone}
@@ -360,8 +355,8 @@ export default function GetQuote() {
               {form.claimsHistory.hasClaims && (
                 <div>
                   <label className="text-navy-400 text-sm mb-2 block">How many?</label>
-                  <input
-                    className="input-field w-32"
+                  <GlowInput
+                    className="w-32"
                     type="number"
                     min={1}
                     max={20}

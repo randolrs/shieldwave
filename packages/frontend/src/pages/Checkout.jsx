@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { createSetupIntent, bindPolicy } from '../lib/api';
+import GlowInput from '../components/GlowInput';
 
 function formatCurrency(amount) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(amount);
@@ -38,16 +39,16 @@ function DemoPaymentForm({ quote, customerId }) {
       <div className="space-y-4">
         <div>
           <label className="text-navy-400 text-sm block mb-1">Card number</label>
-          <input className="input-field" placeholder="4242 4242 4242 4242" defaultValue="4242 4242 4242 4242" />
+          <GlowInput placeholder="4242 4242 4242 4242" defaultValue="4242 4242 4242 4242" />
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="text-navy-400 text-sm block mb-1">Expiry</label>
-            <input className="input-field" placeholder="12/28" defaultValue="12/28" />
+            <GlowInput placeholder="12/28" defaultValue="12/28" />
           </div>
           <div>
             <label className="text-navy-400 text-sm block mb-1">CVC</label>
-            <input className="input-field" placeholder="123" defaultValue="123" />
+            <GlowInput placeholder="123" defaultValue="123" />
           </div>
         </div>
       </div>
