@@ -38,7 +38,7 @@ export default function Landing() {
           <span className="w-2 h-2 bg-brand-500 rounded-full" />
           Insurance for pressure washing professionals
         </div>
-        <h1 className="text-5xl md:text-6xl font-extrabold leading-[1.1] mb-6 text-slate-900">
+        <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold leading-[1.1] mb-6 text-slate-900">
           Get insured in minutes.
           <br />
           <span className="text-brand-600">COI in hand today.</span>
