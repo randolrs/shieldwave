@@ -21,9 +21,9 @@ export default function Success() {
 
   if (!data) {
     return (
-      <div className="min-h-screen bg-navy-950 flex items-center justify-center px-6">
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center px-6">
         <div className="text-center">
-          <h2 className="font-display text-2xl font-bold mb-4">No policy data found</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">No policy data found</h2>
           <button onClick={() => navigate('/')} className="btn-primary">Go Home</button>
         </div>
       </div>
@@ -49,62 +49,64 @@ export default function Success() {
   };
 
   return (
-    <div className="min-h-screen bg-navy-950">
-      <nav className="flex items-center justify-between px-6 py-4 max-w-4xl mx-auto">
-        <a href="/" className="font-display font-bold text-xl">
-          SHIELD<span className="text-volt">WAVE</span>
+    <div className="min-h-screen bg-slate-50">
+      <nav className="flex items-center justify-between px-6 py-5 max-w-3xl mx-auto">
+        <a href="/" className="font-display font-bold text-lg text-slate-900">
+          shield<span className="text-brand-600">wave</span>
         </a>
       </nav>
 
-      <div className="max-w-2xl mx-auto px-6 py-16 text-center">
+      <div className="max-w-xl mx-auto px-6 py-12 text-center">
         {/* Success State */}
-        <div className="bg-volt/10 border border-volt/30 inline-flex items-center justify-center w-20 h-20 mb-8">
-          <span className="text-volt text-4xl">✓</span>
+        <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6">
+          <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
         </div>
-        <h1 className="font-display text-4xl font-bold mb-3">You're Insured!</h1>
-        <p className="text-navy-400 text-lg mb-8">
-          Your policy is now active. Your Certificate of Insurance is ready.
+        <h1 className="text-3xl font-bold text-slate-900 mb-3">You're insured!</h1>
+        <p className="text-slate-500 text-lg mb-8">
+          Your policy is active. Your Certificate of Insurance is ready.
         </p>
 
         {/* Policy Details */}
         <div className="card text-left mb-8 space-y-3">
           {policy?.carrierName && (
             <div className="flex justify-between">
-              <span className="text-navy-400">Carrier</span>
-              <span className="font-display font-bold">{policy.carrierName}</span>
+              <span className="text-slate-500 text-sm">Carrier</span>
+              <span className="font-semibold text-slate-900">{policy.carrierName}</span>
             </div>
           )}
           {policy?.carrierPolicyId && (
             <div className="flex justify-between">
-              <span className="text-navy-400">Policy Number</span>
-              <span className="font-mono">{policy.carrierPolicyId}</span>
+              <span className="text-slate-500 text-sm">Policy number</span>
+              <span className="font-mono text-sm text-slate-700">{policy.carrierPolicyId}</span>
             </div>
           )}
           {policy?.premium && (
             <div className="flex justify-between">
-              <span className="text-navy-400">Annual Premium</span>
-              <span className="font-bold text-volt">{formatCurrency(policy.premium)}</span>
+              <span className="text-slate-500 text-sm">Annual premium</span>
+              <span className="font-semibold text-slate-900">{formatCurrency(policy.premium)}</span>
             </div>
           )}
           {policy?.effectiveDate && (
             <div className="flex justify-between">
-              <span className="text-navy-400">Effective Date</span>
-              <span>{new Date(policy.effectiveDate).toLocaleDateString()}</span>
+              <span className="text-slate-500 text-sm">Effective date</span>
+              <span className="text-slate-700">{new Date(policy.effectiveDate).toLocaleDateString()}</span>
             </div>
           )}
           {policy?.expiryDate && (
             <div className="flex justify-between">
-              <span className="text-navy-400">Expiry Date</span>
-              <span>{new Date(policy.expiryDate).toLocaleDateString()}</span>
+              <span className="text-slate-500 text-sm">Expiry date</span>
+              <span className="text-slate-700">{new Date(policy.expiryDate).toLocaleDateString()}</span>
             </div>
           )}
         </div>
 
         {/* COI Actions */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+        <div className="flex flex-col sm:flex-row gap-3 justify-center mb-10">
           {coiUrl && (
             <a href={coiUrl} target="_blank" rel="noopener noreferrer" className="btn-primary">
-              Download COI (PDF)
+              Download COI
             </a>
           )}
           <button onClick={() => setShowHolderForm(true)} className="btn-secondary">
@@ -115,12 +117,12 @@ export default function Success() {
         {/* Certificate Holder Form */}
         {showHolderForm && (
           <div className="card text-left">
-            <h3 className="font-display text-xl font-bold mb-4">Add Certificate Holder</h3>
-            <p className="text-navy-400 text-sm mb-6">
+            <h3 className="text-lg font-semibold text-slate-900 mb-2">Add certificate holder</h3>
+            <p className="text-slate-500 text-sm mb-6">
               Need to prove insurance to a client or GC? Add them as a certificate holder and we'll generate an updated COI.
             </p>
             {holderSuccess ? (
-              <div className="bg-volt/10 border border-volt/30 px-4 py-3 text-volt text-sm mb-4">
+              <div className="bg-green-50 border border-green-200 rounded-lg px-4 py-3 text-green-700 text-sm">
                 Certificate holder added. Updated COI will be emailed to you shortly.
               </div>
             ) : (
@@ -139,7 +141,7 @@ export default function Success() {
                   style={{ minHeight: '80px' }}
                 />
                 {holderError && (
-                  <div className="bg-red-900/30 border border-red-700 px-4 py-3 text-red-300 text-sm">
+                  <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-red-700 text-sm">
                     {holderError}
                   </div>
                 )}

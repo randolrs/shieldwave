@@ -71,7 +71,6 @@ export default function GetQuote() {
       setStep(step + 1);
       return;
     }
-    // Submit — trim all string fields
     setLoading(true);
     setError(null);
     try {
@@ -106,32 +105,32 @@ export default function GetQuote() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-navy-950 flex items-center justify-center px-6">
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center px-6">
         <div className="text-center">
-          <div className="inline-block w-12 h-12 border-4 border-navy-700 border-t-volt rounded-full animate-spin mb-6" />
-          <h2 className="font-display text-2xl font-bold mb-2">Shopping carriers for the best rates…</h2>
-          <p className="text-navy-400">Comparing quotes from multiple insurers in real time.</p>
+          <div className="inline-block w-10 h-10 border-[3px] border-slate-200 border-t-brand-600 rounded-full animate-spin mb-6" />
+          <h2 className="text-xl font-semibold text-slate-900 mb-2">Shopping carriers for the best rates…</h2>
+          <p className="text-slate-500">Comparing quotes from multiple insurers in real time.</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-navy-950 flex flex-col">
+    <div className="min-h-screen bg-slate-50 flex flex-col">
       {/* Header */}
-      <nav className="flex items-center justify-between px-6 py-4 max-w-4xl mx-auto w-full">
-        <a href="/" className="font-display font-bold text-xl">
-          SHIELD<span className="text-volt">WAVE</span>
+      <nav className="flex items-center justify-between px-6 py-4 max-w-3xl mx-auto w-full">
+        <a href="/" className="font-display font-bold text-lg text-slate-900">
+          shield<span className="text-brand-600">wave</span>
         </a>
-        <span className="font-mono text-sm text-navy-500">
-          {step} / {TOTAL_STEPS}
+        <span className="text-sm text-slate-400 font-medium">
+          Step {step} of {TOTAL_STEPS}
         </span>
       </nav>
 
       {/* Progress Bar */}
-      <div className="w-full bg-navy-900 h-1">
+      <div className="w-full bg-slate-200 h-1">
         <div
-          className="bg-volt h-1 transition-all duration-300"
+          className="bg-brand-600 h-1 transition-all duration-300"
           style={{ width: `${(step / TOTAL_STEPS) * 100}%` }}
         />
       </div>
@@ -139,260 +138,263 @@ export default function GetQuote() {
       {/* Question Area */}
       <div className="flex-1 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-lg">
-          {/* Step 1: Business Info */}
-          {step === 1 && (
-            <div>
-              <h2 className="font-display text-3xl font-bold mb-2">What's your business name?</h2>
-              <p className="text-navy-400 mb-8">We'll use this to look up your info and pre-fill your application.</p>
-              <div className="space-y-4">
-                <GlowInput
-                  placeholder="Business name"
-                  value={form.businessName}
-                  onChange={(e) => update('businessName', e.target.value)}
-                  autoFocus
-                />
-                <GlowInput
-                  placeholder="Street address"
-                  value={form.address}
-                  onChange={(e) => update('address', e.target.value)}
-                />
-                <div className="grid grid-cols-6 gap-4">
-                  <GlowInput
-                    className="col-span-3"
-                    placeholder="City"
-                    value={form.city}
-                    onChange={(e) => update('city', e.target.value)}
-                  />
-                  <GlowInput
-                    className="col-span-1"
-                    placeholder="State"
-                    maxLength={2}
-                    value={form.state}
-                    onChange={(e) => update('state', e.target.value.toUpperCase())}
-                  />
-                  <GlowInput
-                    className="col-span-2"
-                    placeholder="ZIP"
-                    maxLength={5}
-                    inputMode="numeric"
-                    value={form.zip}
-                    onChange={(e) => update('zip', e.target.value.replace(/\D/g, ''))}
-                  />
-                </div>
-              </div>
-            </div>
-          )}
+          <div className="bg-white rounded-2xl shadow-card border border-slate-100 p-8 md:p-10">
 
-          {/* Step 2: Contact Info */}
-          {step === 2 && (
-            <div>
-              <h2 className="font-display text-3xl font-bold mb-2">Your contact information</h2>
-              <p className="text-navy-400 mb-8">So we can send you quotes and your COI.</p>
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+            {/* Step 1: Business Info */}
+            {step === 1 && (
+              <div>
+                <h2 className="text-2xl font-bold text-slate-900 mb-2">What's your business name?</h2>
+                <p className="text-slate-500 mb-8 text-sm">We'll use this to look up your info and pre-fill your application.</p>
+                <div className="space-y-4">
                   <GlowInput
-                    placeholder="First name"
-                    value={form.contactFirstName}
-                    onChange={(e) => update('contactFirstName', e.target.value)}
+                    placeholder="Business name"
+                    value={form.businessName}
+                    onChange={(e) => update('businessName', e.target.value)}
                     autoFocus
                   />
                   <GlowInput
-                    placeholder="Last name"
-                    value={form.contactLastName}
-                    onChange={(e) => update('contactLastName', e.target.value)}
+                    placeholder="Street address"
+                    value={form.address}
+                    onChange={(e) => update('address', e.target.value)}
                   />
+                  <div className="grid grid-cols-6 gap-3">
+                    <GlowInput
+                      className="col-span-3"
+                      placeholder="City"
+                      value={form.city}
+                      onChange={(e) => update('city', e.target.value)}
+                    />
+                    <GlowInput
+                      className="col-span-1"
+                      placeholder="ST"
+                      maxLength={2}
+                      value={form.state}
+                      onChange={(e) => update('state', e.target.value.toUpperCase())}
+                    />
+                    <GlowInput
+                      className="col-span-2"
+                      placeholder="ZIP"
+                      maxLength={5}
+                      inputMode="numeric"
+                      value={form.zip}
+                      onChange={(e) => update('zip', e.target.value.replace(/\D/g, ''))}
+                    />
+                  </div>
                 </div>
-                <GlowInput
-                  type="email"
-                  placeholder="Email address"
-                  value={form.email}
-                  onChange={(e) => update('email', e.target.value)}
-                />
-                <GlowInput
-                  type="tel"
-                  placeholder="Phone number"
-                  value={form.phone}
-                  onChange={(e) => update('phone', e.target.value)}
-                />
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Step 3: Services */}
-          {step === 3 && (
-            <div>
-              <h2 className="font-display text-3xl font-bold mb-2">What services do you offer?</h2>
-              <p className="text-navy-400 mb-8">Select all that apply.</p>
-              <div className="flex flex-wrap gap-3">
-                {SERVICES.map((svc) => (
-                  <button
-                    key={svc}
-                    onClick={() => toggleService(svc)}
-                    className={`chip ${form.services.includes(svc) ? 'chip-selected' : ''}`}
-                  >
-                    {svc}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Step 4: Chemicals */}
-          {step === 4 && (
-            <div>
-              <h2 className="font-display text-3xl font-bold mb-2">
-                Do you use sodium hypochlorite (bleach) or other chemicals?
-              </h2>
-              <p className="text-navy-400 mb-8">This helps us recommend the right pollution liability coverage.</p>
-              <div className="flex gap-4">
-                <button
-                  onClick={() => update('chemicalsUsed', true)}
-                  className={`chip flex-1 py-4 text-lg ${form.chemicalsUsed === true ? 'chip-selected' : ''}`}
-                >
-                  Yes
-                </button>
-                <button
-                  onClick={() => update('chemicalsUsed', false)}
-                  className={`chip flex-1 py-4 text-lg ${form.chemicalsUsed === false ? 'chip-selected' : ''}`}
-                >
-                  No
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Step 5: Employees */}
-          {step === 5 && (
-            <div>
-              <h2 className="font-display text-3xl font-bold mb-2">
-                How many people work in your business, including you?
-              </h2>
-              <p className="text-navy-400 mb-8">This determines if you need workers compensation.</p>
-              <div className="grid grid-cols-2 gap-4">
-                {EMPLOYEE_OPTIONS.map((opt) => (
-                  <button
-                    key={opt.value}
-                    onClick={() => update('employeeCount', opt.value)}
-                    className={`chip py-4 text-lg ${form.employeeCount === opt.value ? 'chip-selected' : ''}`}
-                  >
-                    {opt.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Step 6: Revenue */}
-          {step === 6 && (
-            <div>
-              <h2 className="font-display text-3xl font-bold mb-2">Estimated annual revenue</h2>
-              <p className="text-navy-400 mb-8">Used to calculate your general liability premium.</p>
-              <div className="space-y-3">
-                {REVENUE_OPTIONS.map((opt) => (
-                  <button
-                    key={opt.value}
-                    onClick={() => update('annualRevenue', opt.value)}
-                    className={`chip w-full py-4 text-lg text-left px-6 ${form.annualRevenue === opt.value ? 'chip-selected' : ''}`}
-                  >
-                    {opt.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Step 7: Height */}
-          {step === 7 && (
-            <div>
-              <h2 className="font-display text-3xl font-bold mb-2">
-                Do you work above 2 stories?
-              </h2>
-              <p className="text-navy-400 mb-8">Height work affects which carriers can cover you.</p>
-              <div className="flex gap-4">
-                <button
-                  onClick={() => update('worksAtHeight', true)}
-                  className={`chip flex-1 py-4 text-lg ${form.worksAtHeight === true ? 'chip-selected' : ''}`}
-                >
-                  Yes
-                </button>
-                <button
-                  onClick={() => update('worksAtHeight', false)}
-                  className={`chip flex-1 py-4 text-lg ${form.worksAtHeight === false ? 'chip-selected' : ''}`}
-                >
-                  No
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Step 8: Claims */}
-          {step === 8 && (
-            <div>
-              <h2 className="font-display text-3xl font-bold mb-2">
-                Any insurance claims or lawsuits in the last 3 years?
-              </h2>
-              <p className="text-navy-400 mb-8">Be honest — it helps us find the right carrier for your situation.</p>
-              <div className="flex gap-4 mb-6">
-                <button
-                  onClick={() => setForm((prev) => ({
-                    ...prev,
-                    claimsHistory: { ...prev.claimsHistory, hasClaims: true },
-                  }))}
-                  className={`chip flex-1 py-4 text-lg ${form.claimsHistory.hasClaims === true ? 'chip-selected' : ''}`}
-                >
-                  Yes
-                </button>
-                <button
-                  onClick={() => setForm((prev) => ({
-                    ...prev,
-                    claimsHistory: { hasClaims: false, count: 0 },
-                  }))}
-                  className={`chip flex-1 py-4 text-lg ${form.claimsHistory.hasClaims === false ? 'chip-selected' : ''}`}
-                >
-                  No
-                </button>
-              </div>
-              {form.claimsHistory.hasClaims && (
-                <div>
-                  <label className="text-navy-400 text-sm mb-2 block">How many?</label>
+            {/* Step 2: Contact Info */}
+            {step === 2 && (
+              <div>
+                <h2 className="text-2xl font-bold text-slate-900 mb-2">Your contact information</h2>
+                <p className="text-slate-500 mb-8 text-sm">So we can send you quotes and your COI.</p>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-3">
+                    <GlowInput
+                      placeholder="First name"
+                      value={form.contactFirstName}
+                      onChange={(e) => update('contactFirstName', e.target.value)}
+                      autoFocus
+                    />
+                    <GlowInput
+                      placeholder="Last name"
+                      value={form.contactLastName}
+                      onChange={(e) => update('contactLastName', e.target.value)}
+                    />
+                  </div>
                   <GlowInput
-                    className="w-32"
-                    type="number"
-                    min={1}
-                    max={20}
-                    value={form.claimsHistory.count || ''}
-                    onChange={(e) => setForm((prev) => ({
-                      ...prev,
-                      claimsHistory: { ...prev.claimsHistory, count: parseInt(e.target.value) || 0 },
-                    }))}
+                    type="email"
+                    placeholder="Email address"
+                    value={form.email}
+                    onChange={(e) => update('email', e.target.value)}
+                  />
+                  <GlowInput
+                    type="tel"
+                    placeholder="Phone number"
+                    value={form.phone}
+                    onChange={(e) => update('phone', e.target.value)}
                   />
                 </div>
-              )}
-            </div>
-          )}
+              </div>
+            )}
 
-          {/* Error */}
-          {error && (
-            <div className="mt-6 bg-red-900/30 border border-red-700 px-4 py-3 text-red-300 text-sm">
-              {error}
-            </div>
-          )}
+            {/* Step 3: Services */}
+            {step === 3 && (
+              <div>
+                <h2 className="text-2xl font-bold text-slate-900 mb-2">What services do you offer?</h2>
+                <p className="text-slate-500 mb-8 text-sm">Select all that apply.</p>
+                <div className="flex flex-wrap gap-2.5">
+                  {SERVICES.map((svc) => (
+                    <button
+                      key={svc}
+                      onClick={() => toggleService(svc)}
+                      className={`chip ${form.services.includes(svc) ? 'chip-selected' : ''}`}
+                    >
+                      {svc}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
-          {/* Navigation */}
-          <div className="flex items-center justify-between mt-10">
-            <button
-              onClick={() => step > 1 && setStep(step - 1)}
-              className={`text-navy-400 font-display font-medium ${step === 1 ? 'invisible' : 'hover:text-white'}`}
-            >
-              ← Back
-            </button>
-            <button
-              onClick={handleNext}
-              disabled={!canAdvance()}
-              className={`btn-primary ${!canAdvance() ? 'opacity-30 cursor-not-allowed' : ''}`}
-            >
-              {step === TOTAL_STEPS ? 'Get My Quotes' : 'Continue →'}
-            </button>
+            {/* Step 4: Chemicals */}
+            {step === 4 && (
+              <div>
+                <h2 className="text-2xl font-bold text-slate-900 mb-2">
+                  Do you use bleach or other chemicals?
+                </h2>
+                <p className="text-slate-500 mb-8 text-sm">This helps us recommend the right pollution liability coverage.</p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => update('chemicalsUsed', true)}
+                    className={`chip flex-1 py-4 text-base ${form.chemicalsUsed === true ? 'chip-selected' : ''}`}
+                  >
+                    Yes
+                  </button>
+                  <button
+                    onClick={() => update('chemicalsUsed', false)}
+                    className={`chip flex-1 py-4 text-base ${form.chemicalsUsed === false ? 'chip-selected' : ''}`}
+                  >
+                    No
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Step 5: Employees */}
+            {step === 5 && (
+              <div>
+                <h2 className="text-2xl font-bold text-slate-900 mb-2">
+                  How many people work in your business?
+                </h2>
+                <p className="text-slate-500 mb-8 text-sm">Including yourself. This determines if you need workers comp.</p>
+                <div className="grid grid-cols-2 gap-3">
+                  {EMPLOYEE_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.value}
+                      onClick={() => update('employeeCount', opt.value)}
+                      className={`chip py-4 text-base ${form.employeeCount === opt.value ? 'chip-selected' : ''}`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Step 6: Revenue */}
+            {step === 6 && (
+              <div>
+                <h2 className="text-2xl font-bold text-slate-900 mb-2">Estimated annual revenue</h2>
+                <p className="text-slate-500 mb-8 text-sm">Used to calculate your general liability premium.</p>
+                <div className="space-y-2.5">
+                  {REVENUE_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.value}
+                      onClick={() => update('annualRevenue', opt.value)}
+                      className={`chip w-full py-4 text-base text-left px-5 ${form.annualRevenue === opt.value ? 'chip-selected' : ''}`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Step 7: Height */}
+            {step === 7 && (
+              <div>
+                <h2 className="text-2xl font-bold text-slate-900 mb-2">
+                  Do you work above 2 stories?
+                </h2>
+                <p className="text-slate-500 mb-8 text-sm">Height work affects which carriers can cover you.</p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => update('worksAtHeight', true)}
+                    className={`chip flex-1 py-4 text-base ${form.worksAtHeight === true ? 'chip-selected' : ''}`}
+                  >
+                    Yes
+                  </button>
+                  <button
+                    onClick={() => update('worksAtHeight', false)}
+                    className={`chip flex-1 py-4 text-base ${form.worksAtHeight === false ? 'chip-selected' : ''}`}
+                  >
+                    No
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Step 8: Claims */}
+            {step === 8 && (
+              <div>
+                <h2 className="text-2xl font-bold text-slate-900 mb-2">
+                  Any claims or lawsuits in the last 3 years?
+                </h2>
+                <p className="text-slate-500 mb-8 text-sm">Be honest — it helps us find the right carrier for your situation.</p>
+                <div className="flex gap-3 mb-6">
+                  <button
+                    onClick={() => setForm((prev) => ({
+                      ...prev,
+                      claimsHistory: { ...prev.claimsHistory, hasClaims: true },
+                    }))}
+                    className={`chip flex-1 py-4 text-base ${form.claimsHistory.hasClaims === true ? 'chip-selected' : ''}`}
+                  >
+                    Yes
+                  </button>
+                  <button
+                    onClick={() => setForm((prev) => ({
+                      ...prev,
+                      claimsHistory: { hasClaims: false, count: 0 },
+                    }))}
+                    className={`chip flex-1 py-4 text-base ${form.claimsHistory.hasClaims === false ? 'chip-selected' : ''}`}
+                  >
+                    No
+                  </button>
+                </div>
+                {form.claimsHistory.hasClaims && (
+                  <div>
+                    <label className="text-slate-500 text-sm mb-2 block">How many?</label>
+                    <GlowInput
+                      className="w-32"
+                      type="number"
+                      min={1}
+                      max={20}
+                      value={form.claimsHistory.count || ''}
+                      onChange={(e) => setForm((prev) => ({
+                        ...prev,
+                        claimsHistory: { ...prev.claimsHistory, count: parseInt(e.target.value) || 0 },
+                      }))}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Error */}
+            {error && (
+              <div className="mt-6 bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-red-700 text-sm">
+                {error}
+              </div>
+            )}
+
+            {/* Navigation */}
+            <div className="flex items-center justify-between mt-8">
+              <button
+                onClick={() => step > 1 && setStep(step - 1)}
+                className={`btn-ghost ${step === 1 ? 'invisible' : ''}`}
+              >
+                ← Back
+              </button>
+              <button
+                onClick={handleNext}
+                disabled={!canAdvance()}
+                className={`btn-primary ${!canAdvance() ? 'opacity-40 cursor-not-allowed' : ''}`}
+              >
+                {step === TOTAL_STEPS ? 'Get My Quotes' : 'Continue'}
+              </button>
+            </div>
           </div>
         </div>
       </div>

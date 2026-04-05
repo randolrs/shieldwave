@@ -4,10 +4,12 @@
 
 @layer base {
   body {
-    font-family: 'DM Sans', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
+    @apply text-slate-800 bg-white;
   }
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
+    @apply font-semibold tracking-tight;
   }
 }
 
@@ -25,31 +27,43 @@
 }
 
 @keyframes glow-pulse {
-  0%, 100% { opacity: 0.6; }
+  0%, 100% { opacity: 0.5; }
   50% { opacity: 1; }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-volt text-navy-950 font-display font-bold px-8 py-4 text-lg
-           hover:bg-volt-300 active:bg-volt-500 transition-colors
-           inline-flex items-center justify-center;
+    @apply bg-brand-600 text-white font-semibold px-6 py-3 rounded-lg text-base
+           hover:bg-brand-700 active:bg-brand-800 transition-all
+           inline-flex items-center justify-center shadow-sm;
   }
   .btn-secondary {
-    @apply border-2 border-volt text-volt font-display font-bold px-8 py-4 text-lg
-           hover:bg-volt hover:text-navy-950 transition-colors
+    @apply border border-slate-300 text-slate-700 font-semibold px-6 py-3 rounded-lg text-base
+           hover:bg-slate-50 hover:border-slate-400 transition-all
            inline-flex items-center justify-center;
   }
+  .btn-ghost {
+    @apply text-brand-600 font-medium hover:text-brand-700 transition-colors;
+  }
   .card {
-    @apply bg-navy-900 border border-navy-700 p-6;
+    @apply bg-white border border-slate-200 rounded-xl p-6 shadow-card;
   }
   .input-field {
-    @apply w-full bg-navy-900 border border-navy-600 text-white px-4 py-3 font-body
-           placeholder:text-navy-400 focus:outline-none transition-all;
-    position: relative;
+    @apply w-full bg-white border border-slate-300 text-slate-900 px-4 py-3 rounded-lg
+           placeholder:text-slate-400 focus:outline-none focus:border-brand-500
+           focus:ring-2 focus:ring-brand-500/20 transition-all text-base;
+  }
+  .chip {
+    @apply px-4 py-2.5 border border-slate-200 text-slate-600 rounded-lg text-sm
+           cursor-pointer transition-all hover:border-brand-300 hover:text-brand-600
+           hover:bg-brand-50;
+  }
+  .chip-selected {
+    @apply bg-brand-600 text-white border-brand-600 font-medium
+           hover:bg-brand-700 hover:border-brand-700 hover:text-white;
   }
 
-  /* Glow wrapper — wraps each input for the animated border effect */
+  /* Glow wrapper */
   .glow-wrap {
     position: relative;
     isolation: isolate;
@@ -59,18 +73,19 @@
     content: '';
     position: absolute;
     inset: -2px;
+    border-radius: 10px;
     z-index: -1;
     opacity: 0;
     transition: opacity 0.3s ease;
     background: conic-gradient(
       from var(--glow-angle),
       transparent 0%,
-      #c8ee44 10%,
-      #c8ee44cc 20%,
+      #3b82f6 10%,
+      #3b82f6cc 20%,
       transparent 30%,
       transparent 50%,
-      #c8ee4488 60%,
-      #c8ee44 70%,
+      #3b82f688 60%,
+      #3b82f6 70%,
       transparent 80%
     );
     animation: glow-spin 3s linear infinite;
@@ -80,19 +95,20 @@
     content: '';
     position: absolute;
     inset: -2px;
+    border-radius: 10px;
     z-index: -1;
     opacity: 0;
-    filter: blur(12px);
+    filter: blur(14px);
     transition: opacity 0.3s ease;
     background: conic-gradient(
       from var(--glow-angle),
       transparent 0%,
-      #c8ee44 10%,
-      #c8ee44cc 20%,
+      #3b82f6 10%,
+      #3b82f6cc 20%,
       transparent 30%,
       transparent 50%,
-      #c8ee4488 60%,
-      #c8ee44 70%,
+      #3b82f688 60%,
+      #3b82f6 70%,
       transparent 80%
     );
     animation: glow-spin 3s linear infinite, glow-pulse 2s ease-in-out infinite;
@@ -104,14 +120,6 @@
   }
 
   .glow-wrap:focus-within .input-field {
-    border-color: #c8ee44;
-  }
-
-  .chip {
-    @apply px-4 py-2 border border-navy-600 text-navy-200 font-body text-sm
-           cursor-pointer transition-colors hover:border-volt hover:text-volt;
-  }
-  .chip-selected {
-    @apply bg-volt text-navy-950 border-volt font-semibold;
+    border-color: #3b82f6;
   }
 }
