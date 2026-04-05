@@ -123,3 +123,42 @@
     border-color: #3b82f6;
   }
 }
+
+/* ── Article prose ────────────────────────────────────────────────── */
+
+.prose-article h2 {
+  @apply text-xl font-bold text-slate-900 mt-10 mb-4;
+}
+
+.prose-article h3 {
+  @apply text-lg font-semibold text-slate-900 mt-8 mb-3;
+}
+
+.prose-article p {
+  @apply text-slate-600 leading-relaxed mb-5;
+}
+
+.prose-article ul {
+  @apply space-y-2 mb-6 ml-1;
+}
+
+.prose-article li {
+  @apply text-slate-600 leading-relaxed pl-5 relative;
+}
+
+.prose-article li::before {
+  content: '';
+  @apply absolute left-0 top-[0.6em] w-1.5 h-1.5 bg-brand-400 rounded-full;
+}
+
+.prose-article strong {
+  @apply text-slate-800 font-semibold;
+}
+
+.prose-article blockquote {
+  @apply border-l-4 border-brand-200 bg-brand-50/50 px-5 py-4 my-6 rounded-r-lg;
+}
+
+.prose-article blockquote p {
+  @apply text-brand-800 mb-0;
+}

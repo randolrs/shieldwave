@@ -9,12 +9,12 @@ const STEPS = [
 ];
 
 const COVERAGE = [
-  { title: 'General Liability', desc: 'Covers property damage, bodily injury, and advertising injury claims from your work.' },
-  { title: 'Business Owners Policy', desc: 'Bundles GL with commercial property coverage for your equipment and workspace.' },
-  { title: 'Workers Compensation', desc: 'Required if you have employees. Covers medical costs and lost wages for job injuries.' },
-  { title: 'Commercial Auto', desc: 'Covers your trucks, trailers, and equipment while in transit to job sites.' },
-  { title: 'Pollution Liability', desc: 'Critical if you use chemicals. Covers cleanup costs and third-party damage claims.' },
-  { title: 'Umbrella / Excess', desc: 'Extra protection above your primary limits. Often required for commercial contracts.' },
+  { title: 'General Liability', desc: 'Covers property damage, bodily injury, and advertising injury claims from your work.', href: '/insurance/general-liability' },
+  { title: 'Business Owners Policy', desc: 'Bundles GL with commercial property coverage for your equipment and workspace.', href: '/insurance/business-owners-policy' },
+  { title: 'Workers Compensation', desc: 'Required if you have employees. Covers medical costs and lost wages for job injuries.', href: '/insurance/workers-compensation' },
+  { title: 'Commercial Auto', desc: 'Covers your trucks, trailers, and equipment while in transit to job sites.', href: '/insurance/commercial-auto' },
+  { title: 'Pollution Liability', desc: 'Critical if you use chemicals. Covers cleanup costs and third-party damage claims.', href: '/insurance/pollution-liability' },
+  { title: 'Umbrella / Excess', desc: 'Extra protection above your primary limits. Often required for commercial contracts.', href: '/insurance/umbrella' },
 ];
 
 export default function Landing() {
@@ -108,10 +108,11 @@ export default function Landing() {
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {COVERAGE.map((item) => (
-              <div key={item.title} className="card hover:shadow-card-hover transition-shadow">
-                <h3 className="font-semibold text-slate-900 mb-2">{item.title}</h3>
-                <p className="text-slate-500 text-sm leading-relaxed">{item.desc}</p>
-              </div>
+              <a key={item.title} href={item.href} className="card hover:shadow-card-hover transition-shadow group block">
+                <h3 className="font-semibold text-slate-900 mb-2 group-hover:text-brand-600 transition-colors">{item.title}</h3>
+                <p className="text-slate-500 text-sm leading-relaxed mb-3">{item.desc}</p>
+                <span className="text-brand-600 text-sm font-medium group-hover:underline">Learn more →</span>
+              </a>
             ))}
           </div>
         </div>
