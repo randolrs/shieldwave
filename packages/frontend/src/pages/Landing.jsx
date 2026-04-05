@@ -35,7 +35,6 @@ export default function Landing() {
       {/* Hero */}
       <section className="px-6 pt-20 pb-24 max-w-3xl mx-auto text-center">
         <div className="inline-flex items-center gap-2 bg-brand-50 text-brand-700 px-4 py-1.5 rounded-full mb-8 text-sm font-medium">
-          <span className="w-2 h-2 bg-brand-500 rounded-full" />
           Insurance for pressure washing professionals
         </div>
         <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold leading-[1.1] mb-6 text-slate-900">
