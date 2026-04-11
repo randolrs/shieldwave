@@ -87,7 +87,7 @@ export default function GetQuote() {
         phone: form.phone.trim(),
       };
       const result = await submitQuote(cleaned);
-      navigate('/quotes', { state: result });
+      navigate('/quotes', { state: { ...result, intake: cleaned } });
     } catch (err) {
       setError(err.message);
       setLoading(false);

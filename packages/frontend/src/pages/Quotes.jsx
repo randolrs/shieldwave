@@ -108,10 +108,10 @@ export default function Quotes() {
     );
   }
 
-  const { quotes = [], recommendations = [], requiresManualReview, customerId } = data;
+  const { quotes = [], recommendations = [], requiresManualReview, customerId, intake } = data;
 
   const handleSelect = (quote) => {
-    navigate('/checkout', { state: { quote, customerId } });
+    navigate('/waitlist', { state: { quote, intake } });
   };
 
   return (
