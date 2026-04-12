@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { track, setPersonProperties, getDistinctId } from '../lib/analytics';
 
 function formatCurrency(amount) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(amount);
@@ -38,33 +39,52 @@ export default function Waitlist() {
 
   const handleConfirm = async () => {
     setSubmitting(true);
+
+    const payload = {
+      email: intake?.email || '',
+      name: intake?.contactFirstName
+        ? `${intake.contactFirstName} ${intake.contactLastName}`
+        : '',
+      businessName: intake?.businessName || '',
+      state: intake?.state || '',
+      selectedPlan: quote?.lineOfBusiness || '',
+      selectedCarrier: quote?.carrierName || '',
+      premiumAnnual: quote?.premiumAnnual || 0,
+      annualRevenue: intake?.annualRevenue || '',
+      employeeCount: intake?.employeeCount || '',
+      distinctId: getDistinctId(),
+    };
+
+    setPersonProperties({
+      selected_carrier: payload.selectedCarrier,
+      selected_plan: payload.selectedPlan,
+      quoted_premium_annual: payload.premiumAnnual,
+      annual_revenue: payload.annualRevenue,
+      employee_count: payload.employeeCount,
+      business_name: payload.businessName,
+      state: payload.state,
+    });
+
+    track('waitlist_joined', {
+      carrier_name: payload.selectedCarrier,
+      line_of_business: payload.selectedPlan,
+      premium_annual: payload.premiumAnnual,
+      state: payload.state,
+      annual_revenue: payload.annualRevenue,
+      employee_count: payload.employeeCount,
+    });
+
     try {
       await fetch('/api/waitlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: intake?.email || '',
-          name: intake?.contactFirstName
-            ? `${intake.contactFirstName} ${intake.contactLastName}`
-            : '',
-          businessName: intake?.businessName || '',
-          state: intake?.state || '',
-          selectedPlan: quote?.lineOfBusiness || '',
-          selectedCarrier: quote?.carrierName || '',
-          premiumAnnual: quote?.premiumAnnual || 0,
-          annualRevenue: intake?.annualRevenue || '',
-          employeeCount: intake?.employeeCount || '',
-        }),
+        body: JSON.stringify(payload),
       });
     } catch {
       // Non-blocking — still show confirmation
     }
     setConfirmed(true);
     setSubmitting(false);
-
-    // Conversion tracking hook — fire your pixel here
-    // e.g. window.gtag('event', 'conversion', { ... })
-    // e.g. window.fbq('track', 'Lead', { ... })
   };
 
   if (confirmed) {

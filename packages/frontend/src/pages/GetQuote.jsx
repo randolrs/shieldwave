@@ -1,6 +1,7 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { submitQuote } from '../lib/api';
+import { track, identify } from '../lib/analytics';
 import GlowInput from '../components/GlowInput';
 
 const SERVICES = [
@@ -48,6 +49,10 @@ export default function GetQuote() {
     claimsHistory: { hasClaims: null, count: 0 },
   });
 
+  useEffect(() => {
+    track('quote_started');
+  }, []);
+
   const update = useCallback((field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   }, []);
@@ -67,6 +72,22 @@ export default function GetQuote() {
   };
 
   const handleNext = async () => {
+    track('quote_step_completed', { step, total_steps: TOTAL_STEPS });
+
+    if (step === 2) {
+      const cleanedEmail = form.email.trim().toLowerCase();
+      if (cleanedEmail) {
+        identify(cleanedEmail, {
+          email: cleanedEmail,
+          first_name: form.contactFirstName.trim(),
+          last_name: form.contactLastName.trim(),
+          phone: form.phone.trim(),
+          business_name: form.businessName.trim(),
+          state: form.state.trim().toUpperCase(),
+        });
+      }
+    }
+
     if (step < TOTAL_STEPS) {
       setStep(step + 1);
       return;
@@ -87,8 +108,20 @@ export default function GetQuote() {
         phone: form.phone.trim(),
       };
       const result = await submitQuote(cleaned);
+      track('quote_submitted', {
+        state: cleaned.state,
+        services: cleaned.services,
+        annual_revenue: cleaned.annualRevenue,
+        employee_count: cleaned.employeeCount,
+        chemicals_used: cleaned.chemicalsUsed,
+        works_at_height: cleaned.worksAtHeight,
+        has_claims: cleaned.claimsHistory?.hasClaims || false,
+        quote_count: result?.quotes?.length || 0,
+        requires_manual_review: !!result?.requiresManualReview,
+      });
       navigate('/quotes', { state: { ...result, intake: cleaned } });
     } catch (err) {
+      track('quote_submit_failed', { error: err.message });
       setError(err.message);
       setLoading(false);
     }

@@ -1,4 +1,6 @@
+import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { track } from '../lib/analytics';
 
 const LINE_LABELS = {
   GL: 'General Liability',
@@ -110,7 +112,25 @@ export default function Quotes() {
 
   const { quotes = [], recommendations = [], requiresManualReview, customerId, intake } = data;
 
+  useEffect(() => {
+    track('quotes_viewed', {
+      quote_count: quotes.length,
+      requires_manual_review: !!requiresManualReview,
+      state: intake?.state,
+      min_premium_annual: quotes.length
+        ? Math.min(...quotes.map((q) => q.premiumAnnual || 0))
+        : null,
+    });
+  }, []);
+
   const handleSelect = (quote) => {
+    track('plan_selected', {
+      carrier_name: quote.carrierName,
+      line_of_business: quote.lineOfBusiness,
+      premium_annual: quote.premiumAnnual,
+      premium_monthly: quote.premiumMonthly,
+      state: intake?.state,
+    });
     navigate('/waitlist', { state: { quote, intake } });
   };
 

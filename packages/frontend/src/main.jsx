@@ -2,7 +2,10 @@ import React, { lazy, Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
+import { initAnalytics } from './lib/analytics';
 import Landing from './pages/Landing';
+
+initAnalytics();
 import GetQuote from './pages/GetQuote';
 import Quotes from './pages/Quotes';
 import Checkout from './pages/Checkout';
