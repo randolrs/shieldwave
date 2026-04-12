@@ -4,13 +4,10 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
 import { initAnalytics } from './lib/analytics';
 import Landing from './pages/Landing';
+import GetQuote from './pages/GetQuote';
+import Waitlist from './pages/Waitlist';
 
 initAnalytics();
-import GetQuote from './pages/GetQuote';
-import Quotes from './pages/Quotes';
-import Checkout from './pages/Checkout';
-import Success from './pages/Success';
-import Waitlist from './pages/Waitlist';
 
 const GeneralLiability = lazy(() => import('./pages/articles/GeneralLiability'));
 const BusinessOwnersPolicy = lazy(() => import('./pages/articles/BusinessOwnersPolicy'));
@@ -34,9 +31,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/get-quote" element={<GetQuote />} />
-          <Route path="/quotes" element={<Quotes />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/success" element={<Success />} />
           <Route path="/waitlist" element={<Waitlist />} />
           <Route path="/insurance/general-liability" element={<GeneralLiability />} />
           <Route path="/insurance/business-owners-policy" element={<BusinessOwnersPolicy />} />

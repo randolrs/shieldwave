@@ -4,8 +4,8 @@ const CARRIERS = ['Coterie', 'Travelers', 'Nationwide', 'biBERK', 'Liberty Mutua
 
 const STEPS = [
   { num: '1', title: 'Answer 8 questions', desc: 'Quick intake built for pressure washing contractors. No insurance jargon, no long forms.' },
-  { num: '2', title: 'Compare quotes instantly', desc: 'We shop multiple carriers in real time. See rates side-by-side in under 90 seconds.' },
-  { num: '3', title: 'Get your COI today', desc: 'Bind your policy and receive your Certificate of Insurance immediately via email.' },
+  { num: '2', title: 'We shop the market', desc: 'We match your business to the right carriers and come back with real quotes — not generic rates.' },
+  { num: '3', title: 'Get your COI', desc: 'Once you pick a quote, we bind your policy and email your Certificate of Insurance.' },
 ];
 
 const COVERAGE = [
@@ -38,12 +38,12 @@ export default function Landing() {
           Insurance for pressure washing professionals
         </div>
         <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold leading-[1.1] mb-6 text-slate-900">
-          Get insured in minutes.
+          Insurance built for
           <br />
-          <span className="text-brand-600">COI in hand today.</span>
+          <span className="text-brand-600">pressure washers.</span>
         </h1>
         <p className="text-slate-500 text-lg md:text-xl max-w-xl mx-auto mb-10 leading-relaxed">
-          General liability, commercial property, and workers comp — quoted, bound, and delivered online. Built for exterior cleaning contractors.
+          General liability, commercial property, and workers comp — tailored to exterior cleaning contractors. Tell us about your business and we'll match you to the right carriers.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button onClick={() => navigate('/get-quote')} className="btn-primary text-lg py-4 px-10">
@@ -53,7 +53,7 @@ export default function Landing() {
             How It Works
           </a>
         </div>
-        <p className="text-slate-400 text-sm mt-5">No credit card required to see rates</p>
+        <p className="text-slate-400 text-sm mt-5">Takes about 2 minutes. No credit card required.</p>
       </section>
 
       {/* Carrier Trust Bar */}

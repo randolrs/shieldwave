@@ -4,10 +4,7 @@
   "framework": "vite",
   "rewrites": [
     { "source": "/api/quotes", "destination": "/api/quotes" },
-    { "source": "/api/payment/setup", "destination": "/api/payment/setup" },
     { "source": "/api/waitlist", "destination": "/api/waitlist" },
-    { "source": "/api/bind", "destination": "/api/bind" },
-    { "source": "/api/coi", "destination": "/api/coi" },
     { "source": "/api/health", "destination": "/api/health" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]

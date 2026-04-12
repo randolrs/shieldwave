@@ -108,7 +108,7 @@ export default function GetQuote() {
         phone: form.phone.trim(),
       };
       const result = await submitQuote(cleaned);
-      track('quote_submitted', {
+      track('intake_submitted', {
         state: cleaned.state,
         services: cleaned.services,
         annual_revenue: cleaned.annualRevenue,
@@ -116,12 +116,10 @@ export default function GetQuote() {
         chemicals_used: cleaned.chemicalsUsed,
         works_at_height: cleaned.worksAtHeight,
         has_claims: cleaned.claimsHistory?.hasClaims || false,
-        quote_count: result?.quotes?.length || 0,
-        requires_manual_review: !!result?.requiresManualReview,
       });
-      navigate('/quotes', { state: { ...result, intake: cleaned } });
+      navigate('/waitlist', { state: { intake: cleaned, customerId: result?.customerId } });
     } catch (err) {
-      track('quote_submit_failed', { error: err.message });
+      track('intake_submit_failed', { error: err.message });
       setError(err.message);
       setLoading(false);
     }
@@ -141,8 +139,8 @@ export default function GetQuote() {
       <div className="min-h-screen bg-slate-50 flex items-center justify-center px-6">
         <div className="text-center">
           <div className="inline-block w-10 h-10 border-[3px] border-slate-200 border-t-brand-600 rounded-full animate-spin mb-6" />
-          <h2 className="text-xl font-semibold text-slate-900 mb-2">Shopping carriers for the best rates…</h2>
-          <p className="text-slate-500">Comparing quotes from multiple insurers in real time.</p>
+          <h2 className="text-xl font-semibold text-slate-900 mb-2">Submitting your information…</h2>
+          <p className="text-slate-500">Hang tight — just a moment.</p>
         </div>
       </div>
     );

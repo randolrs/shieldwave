@@ -2,17 +2,19 @@ import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { track, setPersonProperties, getDistinctId } from '../lib/analytics';
 
-function formatCurrency(amount) {
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(amount);
-}
+const REVENUE_LABELS = {
+  'under50k': 'Under $50K',
+  '50k-100k': '$50K – $100K',
+  '100k-250k': '$100K – $250K',
+  '250k-500k': '$250K – $500K',
+  '500k+': '$500K+',
+};
 
-const LINE_LABELS = {
-  GL: 'General Liability',
-  BOP: 'Business Owners Policy',
-  WC: 'Workers Compensation',
-  AUTO: 'Commercial Auto',
-  UMBRELLA: 'Umbrella / Excess',
-  POLLUTION: 'Pollution Liability',
+const EMPLOYEE_LABELS = {
+  solo: 'Just me',
+  '2-5': '2–5 people',
+  '6-10': '6–10 people',
+  '10+': '10+ people',
 };
 
 export default function Waitlist() {
@@ -22,11 +24,11 @@ export default function Waitlist() {
   const [confirmed, setConfirmed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  if (!data) {
+  if (!data?.intake) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center px-6">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">No quote selected</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">No submission found</h2>
           <button onClick={() => navigate('/get-quote')} className="btn-primary">
             Start Over
           </button>
@@ -35,43 +37,37 @@ export default function Waitlist() {
     );
   }
 
-  const { quote, intake } = data;
+  const { intake } = data;
 
   const handleConfirm = async () => {
     setSubmitting(true);
 
     const payload = {
-      email: intake?.email || '',
-      name: intake?.contactFirstName
+      email: intake.email || '',
+      name: intake.contactFirstName
         ? `${intake.contactFirstName} ${intake.contactLastName}`
         : '',
-      businessName: intake?.businessName || '',
-      state: intake?.state || '',
-      selectedPlan: quote?.lineOfBusiness || '',
-      selectedCarrier: quote?.carrierName || '',
-      premiumAnnual: quote?.premiumAnnual || 0,
-      annualRevenue: intake?.annualRevenue || '',
-      employeeCount: intake?.employeeCount || '',
+      businessName: intake.businessName || '',
+      state: intake.state || '',
+      annualRevenue: intake.annualRevenue || '',
+      employeeCount: intake.employeeCount || '',
+      services: intake.services || [],
       distinctId: getDistinctId(),
     };
 
     setPersonProperties({
-      selected_carrier: payload.selectedCarrier,
-      selected_plan: payload.selectedPlan,
-      quoted_premium_annual: payload.premiumAnnual,
       annual_revenue: payload.annualRevenue,
       employee_count: payload.employeeCount,
       business_name: payload.businessName,
       state: payload.state,
+      services: payload.services,
     });
 
     track('waitlist_joined', {
-      carrier_name: payload.selectedCarrier,
-      line_of_business: payload.selectedPlan,
-      premium_annual: payload.premiumAnnual,
       state: payload.state,
       annual_revenue: payload.annualRevenue,
       employee_count: payload.employeeCount,
+      services: payload.services,
     });
 
     try {
@@ -104,8 +100,8 @@ export default function Waitlist() {
           </div>
           <h1 className="text-3xl font-bold text-slate-900 mb-3">You're on the list!</h1>
           <p className="text-slate-500 text-lg mb-4 leading-relaxed">
-            We'll notify you at <strong className="text-slate-700">{intake?.email}</strong> the moment
-            coverage is available in your area.
+            We'll reach out to <strong className="text-slate-700">{intake.email}</strong> the
+            moment your coverage is ready.
           </p>
           <p className="text-slate-400 text-sm mb-10">
             Priority list members get first access and locked-in introductory rates.
@@ -117,6 +113,9 @@ export default function Waitlist() {
       </div>
     );
   }
+
+  const revenueLabel = REVENUE_LABELS[intake.annualRevenue] || intake.annualRevenue;
+  const employeeLabel = EMPLOYEE_LABELS[intake.employeeCount] || intake.employeeCount;
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -131,39 +130,56 @@ export default function Waitlist() {
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 bg-amber-50 text-amber-700 px-4 py-1.5 rounded-full text-sm font-medium mb-6">
             <span className="w-2 h-2 bg-amber-400 rounded-full animate-pulse" />
-            Launching soon in your area
+            Launching soon in {intake.state || 'your state'}
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-3">
-            We're finalizing carrier partnerships in {intake?.state || 'your state'}
+            Thanks, {intake.contactFirstName || 'there'} — we've got your info
           </h1>
           <p className="text-slate-500 leading-relaxed">
-            Your quote is ready — we just need to finish onboarding carriers in your area.
-            Join the priority list and we'll lock in your rate.
+            We're still finalizing carrier partnerships in your area. Join the priority list and
+            we'll send you a real quote the moment coverage goes live.
           </p>
         </div>
 
-        {/* Selected Quote Summary */}
+        {/* Intake Summary */}
         <div className="card mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <span className="font-semibold text-slate-900">{quote.carrierName}</span>
-              <span className="ml-2 text-xs font-medium text-brand-700 bg-brand-50 px-2 py-0.5 rounded-full">
-                {LINE_LABELS[quote.lineOfBusiness] || quote.lineOfBusiness}
-              </span>
-            </div>
-            <span className="text-xs text-green-600 font-medium bg-green-50 px-2 py-0.5 rounded-full">
-              Selected
-            </span>
-          </div>
-          <div className="flex items-baseline gap-1 mb-1">
-            <span className="text-2xl font-bold text-slate-900">
-              {formatCurrency(quote.premiumAnnual)}
-            </span>
-            <span className="text-slate-400 text-sm">/year</span>
-          </div>
-          <p className="text-slate-400 text-sm">
-            {formatCurrency(quote.premiumMonthly)}/mo &middot; {formatCurrency(quote.coverageLimits?.perOccurrence || 1000000)} per occurrence
-          </p>
+          <h3 className="font-semibold text-slate-900 mb-4">Your submission</h3>
+          <dl className="space-y-3 text-sm">
+            {intake.businessName && (
+              <div className="flex justify-between gap-4">
+                <dt className="text-slate-500">Business</dt>
+                <dd className="text-slate-900 font-medium text-right">{intake.businessName}</dd>
+              </div>
+            )}
+            {intake.state && (
+              <div className="flex justify-between gap-4">
+                <dt className="text-slate-500">Location</dt>
+                <dd className="text-slate-900 font-medium text-right">
+                  {intake.city ? `${intake.city}, ` : ''}{intake.state}
+                </dd>
+              </div>
+            )}
+            {intake.services?.length > 0 && (
+              <div className="flex justify-between gap-4">
+                <dt className="text-slate-500">Services</dt>
+                <dd className="text-slate-900 font-medium text-right">
+                  {intake.services.join(', ')}
+                </dd>
+              </div>
+            )}
+            {employeeLabel && (
+              <div className="flex justify-between gap-4">
+                <dt className="text-slate-500">Team size</dt>
+                <dd className="text-slate-900 font-medium text-right">{employeeLabel}</dd>
+              </div>
+            )}
+            {revenueLabel && (
+              <div className="flex justify-between gap-4">
+                <dt className="text-slate-500">Annual revenue</dt>
+                <dd className="text-slate-900 font-medium text-right">{revenueLabel}</dd>
+              </div>
+            )}
+          </dl>
         </div>
 
         {/* What Happens Next */}
@@ -175,8 +191,8 @@ export default function Waitlist() {
                 <span className="text-brand-700 text-xs font-bold">1</span>
               </div>
               <div>
-                <p className="text-slate-900 text-sm font-medium">We finalize your carrier</p>
-                <p className="text-slate-500 text-xs">Completing partnership agreements in your state.</p>
+                <p className="text-slate-900 text-sm font-medium">We finalize carriers in your state</p>
+                <p className="text-slate-500 text-xs">Completing partnership agreements with our underwriters.</p>
               </div>
             </div>
             <div className="flex gap-3">
@@ -184,8 +200,8 @@ export default function Waitlist() {
                 <span className="text-brand-700 text-xs font-bold">2</span>
               </div>
               <div>
-                <p className="text-slate-900 text-sm font-medium">You get notified</p>
-                <p className="text-slate-500 text-xs">Email when your coverage is ready to bind.</p>
+                <p className="text-slate-900 text-sm font-medium">You get your real quote</p>
+                <p className="text-slate-500 text-xs">We email you actual carrier pricing — no fake numbers.</p>
               </div>
             </div>
             <div className="flex gap-3">
@@ -194,7 +210,7 @@ export default function Waitlist() {
               </div>
               <div>
                 <p className="text-slate-900 text-sm font-medium">Bind & get your COI</p>
-                <p className="text-slate-500 text-xs">One-click binding at the rate you see above.</p>
+                <p className="text-slate-500 text-xs">One-click binding once you've reviewed the real quote.</p>
               </div>
             </div>
           </div>
@@ -209,7 +225,7 @@ export default function Waitlist() {
           {submitting ? 'Joining…' : 'Join the Priority List'}
         </button>
         <p className="text-slate-400 text-xs text-center mt-3">
-          No commitment. We'll email you when coverage is live.
+          No commitment. We'll email you when coverage is live in your area.
         </p>
       </div>
     </div>
